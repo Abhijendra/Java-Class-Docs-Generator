@@ -40,7 +40,15 @@ def parse_java_code(code):
     return class_info
 
 def generate_documentation(class_info):
-    pass
+    """Generates an easy-to-understand explanation using Ollama."""
+    prompt = f"""Give me a brief explanation of the class 
+                {class_info['name']}
+                Explain it in a way that a beginner can understand."""
+                
+    response = ollama.chat(model="mistral",
+                           messages= [{"role": "user", "content": prompt}])
+    
+    return response['message']['content']
 
     
     
@@ -48,7 +56,5 @@ def generate_documentation(class_info):
 if __name__ == '__main__':
     print("Setting up things...")
     java_code = read_java_file('Car.java')
-    tree = parse_java_code(java_code)
-    
-    print(tree)
-    
+    class_info = parse_java_code(java_code)
+    documentation = generate_documentation(class_info)
