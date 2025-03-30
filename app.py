@@ -1,10 +1,11 @@
 import javalang
 import ollama
+import streamlit as st
 
 
-def read_java_file(file_path):
-    with open(file_path, 'r') as file:
-        return file.read()
+def read_java_file(uploaded_file):
+    java_code = uploaded_file.read().decode('utf-8')
+    return java_code
     
 
 def parse_java_code(code):
@@ -55,6 +56,21 @@ def generate_documentation(class_info):
 
 if __name__ == '__main__':
     print("Setting up things...")
-    java_code = read_java_file('Car.java')
-    class_info = parse_java_code(java_code)
-    documentation = generate_documentation(class_info)
+    
+    #java_code = read_java_file('Car.java')
+    #class_info = parse_java_code(java_code)
+    # documentation = generate_documentation(class_info)
+    
+    st.title('Java Doc Generator')
+    uploaded_file = st.file_uploader("Upload a java file", type=["java"])
+    
+    if uploaded_file is not None:
+        java_code = read_java_file(uploaded_file)
+        class_info = parse_java_code(java_code)
+        
+        if st.button("Generate Documentation"):
+            with st.spinner("Generating documentation..."):
+                print("Generating documentation...")
+                # documentation = generate_documentation(class_info)
+            st.success("Documentation generated successfully!")
+            st.text_area("Generated Documentation", "Document explaining the java class generated here!", height=300)    
